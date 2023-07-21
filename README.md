@@ -44,5 +44,15 @@ through the `kalix` CLI.
 ## Exercising the service
 
 ```shell
-curl -XPOST localhost:9000/auction/create -d '{ "id": "auction1", "name": "Smart watch", "target": 100 }' -H "Content-Type: application/json"
+curl -XPOST localhost:9000/auctions/create/smart-watch/100 -H "Content-Type: application/json"
+```
+
+* regular bid
+```shell
+curl -XPOST localhost:9000/auctions/bid/smart-watch/50 -H "Content-Type: application/json"
+```
+
+* bid above the target value (closing the auction):
+```shell
+curl -XPOST localhost:9000/auctions/bid/smart-watch/101 -H "Content-Type: application/json"
 ```

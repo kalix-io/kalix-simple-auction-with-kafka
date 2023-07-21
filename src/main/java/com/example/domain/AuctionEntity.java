@@ -1,5 +1,6 @@
 package com.example.domain;
 
+import com.example.Response;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import kalix.javasdk.annotations.EventHandler;
 import kalix.javasdk.annotations.Id;
@@ -41,7 +42,7 @@ public class AuctionEntity extends EventSourcedEntity<Auction, AuctionEvent> {
 
   sealed interface AuctionEvent {
     @TypeName("auction-created")
-    record Created(String id, String name, long ts, int target) implements AuctionEvent {}
+    record Created(String id, long ts, int target) implements AuctionEvent {}
 
     @TypeName("auction-bid-accepted")
     record BidAccepted(String bidId, int value) implements AuctionEvent {}
@@ -49,14 +50,6 @@ public class AuctionEntity extends EventSourcedEntity<Auction, AuctionEvent> {
     @TypeName("auction-closed")
     record Closed() implements AuctionEvent {}
   };
-
-  sealed interface Response {
-    record Ok(String msg) implements Response {
-      public static Ok of(String created) {
-        return new Ok(created);
-      }
-    }
-  }
 
   @Override
   public Auction emptyState() {
@@ -69,7 +62,7 @@ public class AuctionEntity extends EventSourcedEntity<Auction, AuctionEvent> {
       return effects().error("Auction closed. Won by bid: " + currentState().currentBidId);
 
     return effects()
-        .emitEvent(new AuctionEvent.Created(commandContext().entityId(), createCmd.name(), System.currentTimeMillis(), createCmd.target()))
+        .emitEvent(new AuctionEvent.Created(commandContext().entityId(), System.currentTimeMillis(), createCmd.target()))
         .thenReply(__ -> Response.Ok.of("Created"));
   }
 
@@ -89,12 +82,12 @@ public class AuctionEntity extends EventSourcedEntity<Auction, AuctionEvent> {
 
     return effects()
         .emitEvents(events)
-        .thenReply(__ -> Response.Ok.of("Bid accepted"));
+        .thenReply(__ -> Response.Ok.of("Bid accepted: "+ bidCmd.id()));
   }
 
   @EventHandler
   public Auction onEvent(AuctionEvent.Created created) {
-    return new Auction(0, 0, "").apply(created);
+    return currentState().apply(created);
   }
 
   @EventHandler
