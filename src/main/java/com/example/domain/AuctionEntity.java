@@ -40,7 +40,7 @@ public class AuctionEntity extends EventSourcedEntity<Auction, AuctionEvent> {
 
   }
 
-  sealed interface AuctionEvent {
+  public sealed interface AuctionEvent {
     @TypeName("auction-created")
     record Created(String id, long ts, int target) implements AuctionEvent {}
 

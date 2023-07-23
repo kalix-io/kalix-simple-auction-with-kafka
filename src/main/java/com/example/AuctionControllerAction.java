@@ -3,6 +3,7 @@ package com.example;
 import com.example.domain.AuctionCommand;
 import com.example.domain.AuctionEntity;
 import kalix.javasdk.action.Action;
+import kalix.javasdk.annotations.Acl;
 import kalix.javasdk.client.ComponentClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.UUID;
 
+@Acl(allow = @Acl.Matcher(principal = Acl.Principal.INTERNET))
 @RequestMapping("/auctions")
 public class AuctionControllerAction extends Action {
 
