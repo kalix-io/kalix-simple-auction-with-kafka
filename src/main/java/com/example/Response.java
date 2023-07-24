@@ -1,9 +1,9 @@
 package com.example;
 
-public sealed interface Response {
-  record Ok(String msg) implements Response {
-    public static Ok of(String created) {
-      return new Ok(created);
+public record Response(String msg) {
+    public static Response ok = new Response("ok");
+
+    public static Response of(String msg) {
+      return new Response(msg);
     }
-  }
 }

@@ -63,7 +63,7 @@ public class AuctionEntity extends EventSourcedEntity<Auction, AuctionEvent> {
 
     return effects()
         .emitEvent(new AuctionEvent.Created(commandContext().entityId(), System.currentTimeMillis(), createCmd.target()))
-        .thenReply(__ -> Response.Ok.of("Created"));
+        .thenReply(__ -> Response.of("Created"));
   }
 
   @PostMapping("/bid")
@@ -82,7 +82,7 @@ public class AuctionEntity extends EventSourcedEntity<Auction, AuctionEvent> {
 
     return effects()
         .emitEvents(events)
-        .thenReply(__ -> Response.Ok.of("Bid accepted: "+ bidCmd.id()));
+        .thenReply(__ -> Response.of("Bid accepted: "+ bidCmd.id()));
   }
 
   @EventHandler
