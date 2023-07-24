@@ -22,13 +22,18 @@ public class AuctionControllerAction extends Action {
   }
 
   @PostMapping("/create/{auctionId}/{target}")
-  public Action.Effect<Response> create(@PathVariable String auctionId, @PathVariable int target) {
+  public Action.Effect<Response> create(
+      @PathVariable String auctionId,
+      @PathVariable int target) {
     if (target <= 0)
       return effects().error("Target needs to be higher than 0.");
 
     var createCmd = new AuctionCommand.Create(target);
 
-    var defCall = componentClient.forEventSourcedEntity(auctionId).call(AuctionEntity::create).params(createCmd);
+    var defCall = componentClient
+        .forEventSourcedEntity(auctionId)
+        .call(AuctionEntity::create)
+        .params(createCmd);
     return effects().forward(defCall);
   }
 

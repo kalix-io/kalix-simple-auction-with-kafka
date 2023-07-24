@@ -71,7 +71,6 @@ public class AuctionIntegrationTest extends KalixIntegrationTestKitSupport {
         .block();
     assertTrue(responseBid2.msg().contains("accepted"));
 
-
     // then: auction is closed and 4 events should be sent to broker (creation, bid, bid, closing)
     var createdEvent = topic.expectOneTyped(Created.class);
     assertEquals("auction1", createdEvent.getPayload().id());
